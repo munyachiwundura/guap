@@ -22,7 +22,7 @@ const Settings: NextPage = () => {
         <h1 className='text-3xl'>Account</h1>
         <div className='flex items-center mb-5'>
             <div>
-                <Image className='w-24 h-24 rounded-full' src='/icons/icon.png' width={100} height={100}/>
+                <Image alt='Image of Munyaradzi' className='w-24 h-24 rounded-full' src='/icons/icon.png' width={100} height={100}/>
             </div>
             <div className='ml-6'>
             <p className='text-xl font-bold'>Munyaradzi</p>

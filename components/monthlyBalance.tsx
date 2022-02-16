@@ -29,7 +29,7 @@ const MonthlyBalance = () => {
         <h2 className='absolute  top-6 left-6 font-bold text-xl'>Total Balance</h2>
         <div className='w-full overflow-x-scroll no_scrollbar flex items-end justify-between'>
         {months.map((x: Month, y: number) => 
-        <div className='group h-[100%] flex flex-col items-center justify-end '>
+        <div key={y} className='group h-[100%] flex flex-col items-center justify-end '>
             <p className='bg-black text-white  mb-3 rounded p-1 text-sm scale-0 group-hover:scale-100 transition-all'>R {x.balance}</p>
             <div style={{height: `${x.balance/highest * 100 }px`}} className='bg-zinc-400 w-5 rounded hover:bg-black transition-all' ></div>
             <p>{x.month}</p>

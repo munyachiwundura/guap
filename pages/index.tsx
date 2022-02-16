@@ -66,7 +66,7 @@ const Home: NextPage = () => {
       <section>
         <h1 className='text-3xl'>Recent Transactions</h1>
         {
-        transaction.map((x, y) => <TransactionItem ammount={x.ammount} category={x.category} title={x.title} date={x.date}/>)
+        transaction.map((x, y) => <TransactionItem key={y} ammount={x.ammount} category={x.category} title={x.title} date={x.date}/>)
       }
       </section>
       </main>

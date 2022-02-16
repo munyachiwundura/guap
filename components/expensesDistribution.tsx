@@ -21,7 +21,7 @@ const ExpensesDistribution = () => {
         <div className='flex flex-col items-center'>
             <h3 className='text-sm font-bold mt-3 align-text-center'>Income Distribution</h3>
             <div className='flex justify-center flex-wrap w-[100]'>
-            {category.map((x ,y) => <CategoryItem color={x.color} title={x.title}/>)}
+            {category.map((x ,y) => <CategoryItem key={y} color={x.color} title={x.title}/>)}
             </div>
         </div>
     </div>
