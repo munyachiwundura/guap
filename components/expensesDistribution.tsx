@@ -14,7 +14,7 @@ const ExpensesDistribution = () => {
         <h3 className='absolute text-xl font-bold top-5 left-5'>Last 30 Days</h3>
         <div className='mt-4 rounded-[70px] flex items-center justify-center w-[120px] h-[120px] bg-red-400'>
         <div className=' h-[100px] w-[100px] bg-white rounded-[60px] flex flex-col items-center justify-center'>
-            <h3 className='text-xl font-bold'>R {total}</h3>
+            <h3 className='text-xl font-bold dark:text-black'>R {total}</h3>
             <span className='text-sm text-gray-500'>Total Expenses</span>
         </div>
         </div>
