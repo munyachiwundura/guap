@@ -28,8 +28,8 @@ const Wallet: NextPage = () => {
     <CardPreview card={transaction[0].card}>
 {
         transaction.map((x, y) => 
-        <div onClick={()=> setOpen('Transaction')}>
-          <TransactionItem key={y} ammount={x.ammount} category={x.category} title={x.title} date={x.date}/>
+        <div key={y} onClick={()=> setOpen('Transaction')}>
+          <TransactionItem  ammount={x.ammount} category={x.category} title={x.title} date={x.date}/>
         </div>
         )
       }

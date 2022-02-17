@@ -106,8 +106,8 @@ const Home: NextPage = () => {
         <h1 className='text-3xl'>Recent Transactions</h1>
         {
         transaction.map((x, y) => 
-        <div onClick={()=> setOpen('Transaction')}>
-          <TransactionItem key={y} ammount={x.ammount} category={x.category} title={x.title} date={x.date}/>
+        <div key={y} onClick={()=> setOpen('Transaction')}>
+          <TransactionItem ammount={x.ammount} category={x.category} title={x.title} date={x.date}/>
         </div>
         )
       }
