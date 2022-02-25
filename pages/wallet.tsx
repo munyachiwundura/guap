@@ -96,6 +96,7 @@ const Wallet: NextPage<
         <div className="md:grid md:grid-cols-2 gap-1 w-fit">
           {cards.map((x: any, y: number) => (
             <Card
+              key={y}
               onClick={() => {
                 setOpen('Card');
                 setCard(x);

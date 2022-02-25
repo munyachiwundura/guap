@@ -34,7 +34,12 @@ const Login: NextPage = () => {
         </div>
       </div>
       <div>
-        <Image src={'/img/welcome.svg'} width={500} height={500} />
+        <Image
+          alt="Cover Image for GUAP"
+          src={'/img/welcome.svg'}
+          width={500}
+          height={500}
+        />
       </div>
     </main>
   );

@@ -4,7 +4,6 @@ import Card from './card';
 import CardsSelector from './cardsSelector';
 import Input from './input';
 import { useRouter } from 'next/router';
-import type { Card as CardType } from '@prisma/client';
 
 const AddCard: FunctionComponent = () => {
   // In your component body
