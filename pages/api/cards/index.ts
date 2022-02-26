@@ -1,9 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import prisma from '../../../lib/prisma';
 import { getSession } from 'next-auth/react';
-import type { Card } from '@prisma/client';
-
-type Data = Card[];
 
 export default async function handler(
   req: NextApiRequest,
