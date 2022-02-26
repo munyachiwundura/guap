@@ -29,6 +29,7 @@ const TransactionPreview: FunctionComponent<Props> = (props) => {
     >
       <h1 className="text-xl font-bold">Transaction Preview</h1>
       <Card
+        onClick={() => console.log('gotta rest')}
         accountType={props.card.accountType}
         bank={props.card.bank}
         name={props.card.name}
