@@ -7,14 +7,26 @@ import Notifications from './notifications';
 const SideNavigation: FunctionComponent = () => {
   const [open, setOpen] = useState<boolean>(false);
   const router = useRouter();
+  const [notifications, setNotifications] = useState<number>(1);
+
+  const getNotifications = async () => {
+    const request = await fetch('api/notifications');
+    const data = await request.json();
+    setNotifications(data.request.length);
+    if (!request.ok) {
+      throw Error(request.statusText);
+    }
+    return data;
+  };
 
   useEffect(() => {
+    getNotifications();
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') {
         setOpen(false);
       }
     });
-  }, []);
+  }, [router.pathname]);
   return (
     <>
       {open && (
@@ -34,9 +46,14 @@ const SideNavigation: FunctionComponent = () => {
           <h1 className="dark:text-white text-3xl font-bold">GUAP</h1>
           <button
             onClick={() => setOpen(true)}
-            className="text-3xl mr-10 dark:text-white"
+            className="relative text-3xl mr-10 dark:text-white"
           >
             <i className="bi bi-bell"></i>
+            {notifications && (
+              <p className="absolute top-0 right-0 text-sm w-5 h-5 bg-red-500 rounded-full color-white">
+                {notifications}
+              </p>
+            )}
           </button>
         </div>
         <ul className="left-0 w-[100vw] dark:bg-black dark:text-white py-8 bottom-0 bg-white md:w-auto md:flex-col  flex-row md:relative absolute  mt-10 flex  justify-evenly">

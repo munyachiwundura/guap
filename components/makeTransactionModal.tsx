@@ -60,7 +60,6 @@ const MakeTransactionModal: FunctionComponent = () => {
     e.preventDefault();
     const form = new FormData(e.target);
     const formData = Object.fromEntries(form.entries());
-    console.log(formData);
 
     const request = await fetch('api/transactions/create', {
       method: 'POST',

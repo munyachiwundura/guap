@@ -18,8 +18,10 @@ const PreviewRibbon: FunctionComponent<Props> = (props) => {
       {props.icon && (
         <i
           style={{ background: props.color }}
-          className={`aspect-square rounded text-xl p-3 mr-3 bi bi-${props.icon}`}
-        ></i>
+          className={`aspect-square rounded text-xl p-3 mr-3 bi `}
+        >
+          {props.icon}
+        </i>
       )}
       {!props.ammount && <p className="text-xl">{props.title}</p>}
       {props.ammount && (

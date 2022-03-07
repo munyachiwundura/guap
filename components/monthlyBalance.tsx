@@ -1,49 +1,72 @@
-import React from 'react';
+import { FunctionComponent } from 'react';
+import { Bar } from 'react-chartjs-2';
 
-const months = [
-  { month: 'Jan', balance: 50 },
-  { month: 'Feb', balance: 850 },
-  { month: 'Mar', balance: 950 },
-  { month: 'Apr', balance: 1050 },
-  { month: 'May', balance: 1150 },
-  { month: 'Jun', balance: 1250 },
-  { month: 'Jul', balance: 1350 },
-  { month: 'Aug', balance: 1450 },
-  { month: 'Sep', balance: 1550 },
-  { month: 'Oct', balance: 1650 },
-  { month: 'Nov', balance: 1750 },
-  { month: 'Dec', balance: 1850 },
-];
+import {
+  Chart as ChartJS,
+  BarElement,
+  Tooltip,
+  Legend,
+  CategoryScale,
+  LinearScale,
+} from 'chart.js';
+ChartJS.register(BarElement, Tooltip, Legend, CategoryScale, LinearScale);
 
 type Month = {
   month: string;
   balance: number;
 };
 
-const highest = Math.max(...months.map((x, y) => x.balance));
+type Props = {
+  months: Month[];
+};
 
-const MonthlyBalance = () => {
+const MonthlyBalance: FunctionComponent<Props> = ({ months }) => {
+  const highest = Math.max(...months.map((x, y) => x.balance));
+  const datas = {
+    labels: months.map((x) => x.month),
+
+    datasets: [
+      {
+        data: months.map((x) => x.balance),
+
+        backgroundColor: months.map((x) => 'grey'),
+        borderRadius: 5,
+        hoverBackgroundColor: months.map((x) => 'black'),
+        borderWidth: 0,
+        weight: 2,
+      },
+    ],
+  };
   return (
-    <div className=" dark:bg-white/10 relative flex p-6 pt-10 w-[600]  bg-white shadow-md">
-      <h2 className="absolute  top-6 left-6 font-bold text-xl">
+    <div className="justify-center max-h-[290px] dark:bg-white/10 relative flex p-6 pt-12 w-[600]  bg-white shadow-md">
+      <h2 className="absolute  top-3 left-6 font-bold text-xl">
         Total Balance
       </h2>
-      <div className="w-full overflow-x-scroll no_scrollbar flex items-end justify-between">
-        {months.map((x: Month, y: number) => (
-          <div
-            key={y}
-            className="group h-[100%] flex flex-col items-center justify-end "
-          >
-            <p className="bg-black text-white  mb-3 rounded p-1 text-sm scale-0 group-hover:scale-100 transition-all">
-              R {x.balance}
-            </p>
-            <div
-              style={{ height: `${(x.balance / highest) * 100}px` }}
-              className="bg-zinc-400 w-5 rounded hover:bg-black transition-all"
-            ></div>
-            <p>{x.month}</p>
-          </div>
-        ))}
+      <div className="w-[85%]">
+        <Bar
+          data={datas}
+          options={{
+            scales: {
+              y: {
+                display: false,
+                grid: {
+                  display: false,
+                },
+              },
+
+              x: {
+                grid: {
+                  display: false,
+                },
+              },
+            },
+            plugins: {
+              legend: {
+                display: false,
+              },
+            },
+          }}
+        />
       </div>
     </div>
   );

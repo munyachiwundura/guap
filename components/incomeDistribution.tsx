@@ -1,27 +1,25 @@
-import React from 'react';
+import { FunctionComponent } from 'react';
 import CategoryItem from './categoryItem';
 import { motion } from 'framer-motion';
 
-const category = [
-  { title: 'School', ammount: 20, color: '#3431c2' },
-  { title: 'House', ammount: 60, color: '#65dfc9' },
-  { title: 'Rent', ammount: 120, color: '#8a8a8a' },
-  { title: 'Groceries', ammount: 220, color: 'black' },
-];
+type Props = {
+  data: Category[];
+};
 
 type Category = {
   title: string;
   ammount: number;
+  color: string;
 };
 
-const IncomeDistribution = () => {
-  const total = category.reduce((y, x) => y + x.ammount, 0);
+const IncomeDistribution: FunctionComponent<Props> = ({ data }) => {
+  const total = data.reduce((y, x) => y + x.ammount, 0);
   console.log();
   return (
     <div className="dark:bg-white/10  md:mb-0 mb-6 flex p-8 justify-between items-center shadow-md w-[100%] md:mr-4 h-72 bg-white relative">
       <h3 className="absolute text-xl font-bold top-3 left-5">Last 30 Days</h3>
       <div className="h-[80%] -space-y-4 mt-5 w-12 bg-slate-300 rounded-lg">
-        {category.map((x, y) => (
+        {data.map((x, y) => (
           <motion.div
             animate={{ scaleY: 1 }}
             transition={{ delay: y / 3 }}
@@ -40,10 +38,10 @@ const IncomeDistribution = () => {
         ))}
       </div>
       <div className="ml-5">
-        <h3 className="text-xl font-bold">R {total}</h3>
         <span className="text-sm text-gray-500">Total Income</span>
+        <h3 className="text-xl font-bold">R {total}</h3>
         <h3 className="text-sm font-bold my-3">Income Distribution</h3>
-        {category.map((x, y) => (
+        {data.map((x, y) => (
           <CategoryItem key={y} color={x.color} title={x.title} />
         ))}
       </div>

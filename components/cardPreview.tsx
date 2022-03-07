@@ -4,6 +4,7 @@ import Card from './card';
 
 type Props = {
   card: {
+    id: string;
     name: string;
     number: string;
     bank: string;
@@ -12,6 +13,17 @@ type Props = {
 };
 
 const CardPreview: FunctionComponent<Props> = (props) => {
+  const deleteCard = async () => {
+    const request = await fetch('/api/cards/delete', {
+      method: 'POST',
+      body: JSON.stringify({ id: props.card.id }),
+    });
+    if (!request.ok) {
+      throw Error(request.statusText);
+    }
+    return request;
+  };
+
   return (
     <motion.div
       animate={{ y: 0 }}
@@ -28,11 +40,12 @@ const CardPreview: FunctionComponent<Props> = (props) => {
       <h2>Recent Transactions</h2>
       {props.children}
       <motion.button
+        onClick={() => deleteCard()}
         layoutId="addTransaction"
         whileTap={{ scale: 0.9 }}
         className="dark:bg-white dark:text-black mt-3 p-3 text-md bg-black text-white rounded"
       >
-        Edit Card
+        Delete Card
       </motion.button>
     </motion.div>
   );

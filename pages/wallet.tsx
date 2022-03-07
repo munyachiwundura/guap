@@ -9,15 +9,17 @@ import Backdrop from '../components/backdrop';
 import AddCard from '../components/addCard';
 import TransactionItem from '../components/transactionItem';
 import CardPreview from '../components/cardPreview';
+import TransactionPreview from '../components/transactionPreview';
 import prisma from '../lib/prisma';
 import { getSession } from 'next-auth/react';
-import { Card as CardType } from '@prisma/client';
+import { Card as CardType, Transaction } from '@prisma/client';
 
 const Wallet: NextPage<
   InferGetServerSidePropsType<typeof getServerSideProps>
 > = ({ cards }) => {
   const [open, setOpen] = useState<string | boolean>(false);
   const [card, setCard] = useState<any>();
+  const [selectTransaction, setSelectTransaction] = useState<any>();
   const transaction = [
     {
       card: {
@@ -67,23 +69,40 @@ const Wallet: NextPage<
     <div>
       {open && (
         <Backdrop onClick={() => setOpen(false)}>
+          {open === 'Transaction' && (
+            <TransactionPreview
+              id={selectTransaction.id}
+              ammount={selectTransaction?.ammount}
+              card={selectTransaction.Card}
+              category={selectTransaction.TransactionCategory}
+              date={selectTransaction?.date}
+              title={selectTransaction?.title}
+            />
+          )}
           {open === 'AddCard' && <AddCard />}
           {open === 'Card' && card && (
             <CardPreview
               card={{
+                id: card.id,
                 accountType: card.accountType,
                 bank: card?.bank,
                 name: card?.name,
                 number: card?.number,
               }}
             >
-              {transaction.map((x, y) => (
-                <div key={y} onClick={() => setOpen('Transaction')}>
+              {card.transactions.map((x: any, y: number) => (
+                <div
+                  key={y}
+                  onClick={() => {
+                    setSelectTransaction(x);
+                    setOpen('Transaction');
+                  }}
+                >
                   <TransactionItem
                     ammount={x.ammount}
-                    category={x.category}
+                    category={x.TransactionCategory}
                     title={x.title}
-                    date={x.date}
+                    date={`${x.date}`}
                   />
                 </div>
               ))}
@@ -94,7 +113,7 @@ const Wallet: NextPage<
       <main className="dark:bg-white/10 no_scrollbar bg-black/5 md:ml-[130px] flex justify-center items-center flex-col md:mr-auto dark:text-white min-h-[90vh] mt-16 gap-6 p-8 pb-[100px] overflow-y-scroll md:pb-0 z-10 relative w-[80vw] rounded">
         <h1 className="text-3xl font-bold">Your Cards</h1>
         <div className="md:grid md:grid-cols-2 gap-1 w-fit">
-          {cards.map((x: any, y: number) => (
+          {JSON.parse(cards).map((x: any, y: number) => (
             <Card
               key={y}
               onClick={() => {
@@ -136,11 +155,20 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
         email: session?.user?.email,
       },
     },
+    include: {
+      transactions: {
+        include: {
+          TransactionCategory: true,
+          Card: true,
+        },
+      },
+    },
   });
+  const data = JSON.stringify(request);
   console.log(request);
   return {
     props: {
-      cards: request,
+      cards: data,
     },
   };
 };

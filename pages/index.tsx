@@ -26,6 +26,8 @@ const Home: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = (
   props
 ) => {
   const [open, setOpen] = useState<string | boolean>(false);
+  const [selectTransaction, setSelectTransaction] = useState<any>();
+  const [selectCard, setSelectCard] = useState<any>();
   const [cards, setCards] = useState(props.cards);
 
   const getCards = async () => {
@@ -39,7 +41,7 @@ const Home: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = (
     }
     return data;
   };
-  console.log('p', JSON.parse(props.transactions));
+  console.log(props.income);
   useEffect(() => {
     getCards();
     document.addEventListener('keydown', (e) => {
@@ -63,6 +65,7 @@ const Home: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = (
   const transaction = [
     {
       card: {
+        id: 'hello',
         bank: 'absa',
         name: 'munyaradzi',
         accountType: 'Cheque',
@@ -108,27 +111,37 @@ const Home: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = (
       {open && (
         <Backdrop onClick={() => setOpen(false)}>
           {open === 'Card' && (
-            <CardPreview card={transaction[0].card}>
-              {transaction.map((x, y) => (
-                <div key={y} onClick={() => setOpen('Transaction')}>
-                  <TransactionItem
-                    ammount={x.ammount}
-                    category={x.category}
-                    title={x.title}
-                    date={x.date}
-                  />
-                </div>
-              ))}
+            <CardPreview card={selectCard}>
+              {JSON.parse(props.transactions)
+                .filter((x: any) => x.cardId === selectCard.id)
+                .slice(0, 4)
+                .map((x: any, y: number) => (
+                  <div
+                    key={y}
+                    onClick={() => {
+                      setSelectTransaction(x);
+                      setOpen('Transaction');
+                    }}
+                  >
+                    <TransactionItem
+                      ammount={x.ammount}
+                      category={x.TransactionCategory}
+                      title={x.title}
+                      date={x.date}
+                    />
+                  </div>
+                ))}
             </CardPreview>
           )}
           {open === 'MakeTransaction' && <MakeTransactionModal />}
           {open === 'Transaction' && (
             <TransactionPreview
-              ammount={transaction[0].ammount}
-              card={transaction[0].card}
-              category={transaction[0].category}
-              date={transaction[0].date}
-              title={transaction[0].title}
+              id={selectTransaction.id}
+              ammount={selectTransaction?.ammount}
+              card={selectTransaction.Card}
+              category={selectTransaction.TransactionCategory}
+              date={selectTransaction?.date}
+              title={selectTransaction?.title}
             />
           )}
         </Backdrop>
@@ -156,7 +169,10 @@ const Home: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = (
               {cards.map((x: any, y: number) => (
                 <Card
                   key={y}
-                  onClick={() => setOpen('Card')}
+                  onClick={() => {
+                    setSelectCard(x);
+                    setOpen('Card');
+                  }}
                   accountType={x.accountType}
                   bank={x.bank}
                   name={x.name}
@@ -169,20 +185,26 @@ const Home: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = (
         <section>
           <h1 className="text-3xl mt-6">Distribution</h1>
           <div className="flex w-[100%] justify-between md:flex-row flex-col">
-            <IncomeDistribution />
-            <ExpensesDistribution />
+            <IncomeDistribution data={props.income} />
+            <ExpensesDistribution data={props.expenses} />
           </div>
         </section>
         <section>
           <h1 className="text-3xl">Monthly Balance</h1>
-          <MonthlyBalance />
+          <MonthlyBalance months={props.monthlyBalance} />
         </section>
         <section>
           <h1 className="text-3xl">Recent Transactions</h1>
           {JSON.parse(props.transactions)
             .slice(0, 4)
             .map((x: any, y: number) => (
-              <div key={y} onClick={() => setOpen('Transaction')}>
+              <div
+                key={y}
+                onClick={() => {
+                  setSelectTransaction(x);
+                  setOpen('Transaction');
+                }}
+              >
                 <TransactionItem
                   ammount={x.ammount}
                   category={x.TransactionCategory}
@@ -220,16 +242,84 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     },
     include: {
       TransactionCategory: true,
+      Card: true,
     },
   });
 
+  const categories = await prisma.transactionCategory.findMany({
+    where: {
+      user: {
+        email: session?.user?.email,
+      },
+    },
+  });
+
+  let income = [];
+  let expenses = [];
+
+  for (let i = 0; i < categories.length; i++) {
+    let monthlyIncome: any = {};
+    monthlyIncome['title'] = categories[i].title;
+    monthlyIncome['color'] = categories[i].color;
+    monthlyIncome['ammount'] = requestTransactions
+      .filter((x) => x.transactionCategoryId === categories[i].id)
+      .filter((x) => x.ammount > 0)
+      .reduce((y, x) => y + x.ammount, 0);
+
+    monthlyIncome.ammount > 0 && income.push(monthlyIncome);
+  }
+  for (let i = 0; i < categories.length; i++) {
+    let monthlyExpenses: any = {};
+    monthlyExpenses['title'] = categories[i].title;
+    monthlyExpenses['color'] = categories[i].color;
+    monthlyExpenses['ammount'] = requestTransactions
+      .filter((x) => x.transactionCategoryId === categories[i].id)
+      .filter((x) => x.ammount < 0)
+      .reduce((y, x) => y + x.ammount, 0);
+    monthlyExpenses.ammount < 0 && expenses.push(monthlyExpenses);
+  }
+
+  let monthNames = [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
+  ];
+  let months = [];
+  for (let i = 0; i < monthNames.length; i++) {
+    let month: any = {};
+    month['balance'] = requestTransactions
+      .filter((x) => x.date.getMonth() === i)
+      .reduce((y, x) => y + x.ammount, 0);
+    month['month'] = monthNames[i];
+    months.push(month);
+  }
+
+  const balance = requestTransactions.reduce((y, x) => y + x.ammount, 0);
+
   const transactions = JSON.stringify(requestTransactions);
+  console.log(
+    requestTransactions.map((x) => x.TransactionCategory),
+    'Monthly Income'
+  );
 
   return {
     props: {
       cards: requestCards,
       user: session?.user,
       transactions: transactions,
+      income: income,
+      expenses: expenses,
+      monthlyBalance: months,
+      Balance: balance,
     },
   };
 };

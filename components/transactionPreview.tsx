@@ -2,8 +2,10 @@ import { FunctionComponent } from 'react';
 import { motion } from 'framer-motion';
 import Card from './card';
 import PreviewRibbon from './previewRibbon';
+import { useRouter } from 'next/router';
 
 type Props = {
+  id: string;
   card: {
     bank: string;
     name: string;
@@ -21,6 +23,20 @@ type Props = {
 };
 
 const TransactionPreview: FunctionComponent<Props> = (props) => {
+  const deleteTransaction = async () => {
+    const request = await fetch('/api/transactions/delete', {
+      method: 'POST',
+      body: JSON.stringify({
+        id: props.id,
+      }),
+    });
+    const data = await request.json();
+    if (!request.ok) {
+      throw Error(request.statusText);
+    }
+    return data;
+  };
+
   return (
     <motion.div
       animate={{ y: 0 }}
@@ -46,9 +62,10 @@ const TransactionPreview: FunctionComponent<Props> = (props) => {
       <motion.button
         layoutId="addTransaction"
         whileTap={{ scale: 0.9 }}
+        onClick={() => deleteTransaction()}
         className="dark:bg-white dark:text-black mt-3 p-3 text-md bg-black text-white rounded"
       >
-        Edit Transaction
+        Delete Transaction
       </motion.button>
     </motion.div>
   );

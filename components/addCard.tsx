@@ -16,6 +16,8 @@ const AddCard: FunctionComponent = () => {
   const [account, setAccount] = useState<any>('Cheque');
   const [balance, setBalance] = useState<number>(0);
 
+  const banks = ['etherium', 'absa', 'fnb', ' discovery', ' bitcoin', 'paypal'];
+
   const submition: any = async (e: any) => {
     e.preventDefault();
     const form = new FormData(e.target);
@@ -64,6 +66,33 @@ const AddCard: FunctionComponent = () => {
             onClick={() => setCard('paypal')}
             accountType={account}
             bank={'paypal'}
+            name={name}
+            number={number}
+          />
+        </div>
+        <div className={card !== 'bitcoin' ? 'opacity-50' : 'opacity-100'}>
+          <Card
+            onClick={() => setCard('bitcoin')}
+            accountType={account}
+            bank={'bitcoin'}
+            name={name}
+            number={number}
+          />
+        </div>
+        <div className={card !== 'etherium' ? 'opacity-50' : 'opacity-100'}>
+          <Card
+            onClick={() => setCard('etherium')}
+            accountType={account}
+            bank={'etherium'}
+            name={name}
+            number={number}
+          />
+        </div>
+        <div className={card !== 'discovery' ? 'opacity-50' : 'opacity-100'}>
+          <Card
+            onClick={() => setCard('discovery')}
+            accountType={account}
+            bank={'discovery'}
             name={name}
             number={number}
           />
