@@ -42,8 +42,8 @@ const Settings: NextPage<
   const [subscription, setSubscription] = useState<any>(null);
   const [registration, setRegistration] = useState<any>(null);
 
-  const subscribeOnClick = async (event: any) => {
-    event.preventDefault();
+  const subscribeOnClick = async () => {
+    // event.preventDefault();
     const sub = await registration.pushManager.subscribe({
       userVisibleOnly: true,
       applicationServerKey: base64ToUint8Array(
@@ -57,8 +57,8 @@ const Settings: NextPage<
     console.log(sub);
   };
 
-  const unsubscribeOnClick = async (event: any) => {
-    event.preventDefault();
+  const unsubscribeOnClick = async () => {
+    // event.preventDefault();
     await subscription.unsubscribe();
     // TODO: you should call your API to delete or invalidate subscription data on server
     setSubscription(null);
@@ -146,7 +146,7 @@ const Settings: NextPage<
             active={isSubscribed}
             icon="bell"
             onClick={() =>
-              isSubscribed ? unsubscribeOnClick : subscribeOnClick
+              isSubscribed ? unsubscribeOnClick() : subscribeOnClick()
             }
             title="Notifications"
             toggle={true}
