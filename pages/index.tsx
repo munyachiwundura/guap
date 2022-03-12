@@ -21,6 +21,7 @@ import CardPreview from '../components/cardPreview';
 import { Card as CardType, Transaction } from '@prisma/client';
 import prisma from '../lib/prisma';
 import { getSession } from 'next-auth/react';
+import Link from 'next/link';
 
 const Home: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = (
   props
@@ -35,7 +36,7 @@ const Home: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = (
     const data = await request.json();
 
     setCards(data.request);
-
+    console.log('cards', cards, data.request);
     if (!request.ok) {
       throw Error(request.statusText);
     }
@@ -50,57 +51,6 @@ const Home: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = (
       }
     });
   }, []);
-
-  type Transaction = {
-    title: string;
-    category: {
-      color: string;
-      icon: string;
-      title: string;
-    };
-    date: string;
-    ammount: number;
-  };
-
-  const transaction = [
-    {
-      card: {
-        id: 'hello',
-        bank: 'absa',
-        name: 'munyaradzi',
-        accountType: 'Cheque',
-        number: '5555 5555 5555 555',
-      },
-      ammount: -200,
-      category: { color: '#65dfc9', icon: 'house', title: 'Home' },
-      date: '12 February 2022 at 15: 16',
-      title: 'Gas',
-    },
-    {
-      card: {
-        bank: 'absa',
-        name: 'munyaradzi',
-        accountType: 'Cheque',
-        number: '5555 5555 5555 555',
-      },
-      ammount: 200,
-      category: { color: '#3431c2', icon: 'house', title: 'Home' },
-      date: '12 February 2022 at 15: 16',
-      title: 'Gas',
-    },
-    {
-      card: {
-        bank: 'absa',
-        name: 'munyaradzi',
-        accountType: 'Cheque',
-        number: '5555 5555 5555 555',
-      },
-      ammount: -200,
-      category: { color: '#FF2C6B', icon: 'house', title: 'Home' },
-      date: '12 February 2022 at 15: 16',
-      title: 'Gas',
-    },
-  ];
 
   return (
     <div>
@@ -166,19 +116,30 @@ const Home: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = (
             <h1 className=" text-xl font-bold top-0 left-6">Your Cards</h1>
 
             <CardsSelector>
-              {cards.map((x: any, y: number) => (
-                <Card
-                  key={y}
-                  onClick={() => {
-                    setSelectCard(x);
-                    setOpen('Card');
-                  }}
-                  accountType={x.accountType}
-                  bank={x.bank}
-                  name={x.name}
-                  number={x.accountNumber}
-                />
-              ))}
+              {cards.length !== 0 ? (
+                cards.map((x: any, y: number) => (
+                  <Card
+                    key={y}
+                    onClick={() => {
+                      setSelectCard(x);
+                      setOpen('Card');
+                    }}
+                    accountType={x.accountType}
+                    bank={x.bank}
+                    name={x.name}
+                    number={x.accountNumber}
+                  />
+                ))
+              ) : (
+                <div className="flex items-center justify-center w-[135px] h-[85px] md:w-[335px] md:h-[185px] m-5 flex-shrink-0">
+                  <h1 className="text-md font-semibold relative">
+                    You do not have any cards to display please add a card at
+                    <Link href="/wallet">
+                      <a className="text-blue-500"> Wallet</a>
+                    </Link>
+                  </h1>
+                </div>
+              )}
             </CardsSelector>
           </div>
         </section>
@@ -195,6 +156,17 @@ const Home: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = (
         </section>
         <section>
           <h1 className="text-3xl">Recent Transactions</h1>
+          {props.transactions.length === 2 && (
+            <h2 className="text-xl mt-6">
+              <span
+                className="text-blue-500 cursor-pointer"
+                onClick={() => setOpen('MakeTransaction')}
+              >
+                Make some Transactions
+              </span>{' '}
+              and they will be displayed here
+            </h2>
+          )}
           {JSON.parse(props.transactions)
             .slice(0, 4)
             .map((x: any, y: number) => (
@@ -223,7 +195,12 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const session = await getSession(ctx);
 
   if (!session) {
-    ctx.res.writeHead(303, { Location: '/login' });
+    return {
+      redirect: {
+        permanent: false,
+        destination: '/login',
+      },
+    };
   }
 
   const requestCards = await prisma.card.findMany({

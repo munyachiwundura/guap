@@ -49,7 +49,7 @@ const SideNavigation: FunctionComponent = () => {
             className="relative text-3xl mr-10 dark:text-white"
           >
             <i className="bi bi-bell"></i>
-            {notifications && (
+            {notifications !== 0 && (
               <p className="absolute top-0 right-0 text-sm w-5 h-5 bg-red-500 rounded-full color-white">
                 {notifications}
               </p>

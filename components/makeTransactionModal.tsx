@@ -2,6 +2,7 @@ import { FunctionComponent, useEffect, useState } from 'react';
 import Card from './card';
 import CardsSelector from './cardsSelector';
 import Input from './input';
+import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/router';
 
@@ -81,6 +82,16 @@ const MakeTransactionModal: FunctionComponent = () => {
       <form onSubmit={(e) => submition(e)}>
         <h1 className="font-bold">Pick A Card</h1>
         <CardsSelector>
+          {cards.length === 0 && (
+            <div className="flex items-center justify-center w-[135px] h-[85px] md:w-[335px] md:h-[185px] m-5 flex-shrink-0">
+              <h1 className="text-md font-semibold relative">
+                You do not have any cards to display please add a card at
+                <Link href="/wallet">
+                  <a className="text-blue-500"> Wallet</a>
+                </Link>
+              </h1>
+            </div>
+          )}
           {cards.map((x: any, y: number) => (
             <div
               key={y}

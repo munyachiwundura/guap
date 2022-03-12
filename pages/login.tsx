@@ -48,7 +48,12 @@ const Login: NextPage = () => {
 export const getServerSideProps: GetServerSideProps = async (req) => {
   const session = await getSession(req);
   if (session) {
-    req.res.writeHead(303, { Location: '/' });
+    return {
+      redirect: {
+        permanent: false,
+        destination: '/',
+      },
+    };
   }
   return {
     props: {
