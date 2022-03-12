@@ -1,9 +1,16 @@
 # Guap
 
 [![See Me get Guap Right now](http://img.youtube.com/vi/dzudcm-ywJo/0.jpg)](https://www.youtube.com/watch?v=dzudcm-ywJo&ab_channel=BigSeanVEVO 'Guap')
+
 Sorry I just couldn't resist 😂
 
 ## Background
+
+Okay this on was a really fun on, Well just like every other next.js app i've made but what made this more interesting is why I made it, So I was trying to manage my finances so I don't turn into a mathematician at the end of the month 😂, I looked for an a but however I didn't have space on my phone to downaload a dedicated app [Send Galaxy S22 Money 😂](munyachiwundura@gmail.com), or able to find any good online solutions.
+
+Shameless begging aside I decided to just go ahed and say "Fine I'll do it myself" and make my own money management app that can be Installed as a progressive web app, It also arrived as a great opportunity to learn TailwindCSS](https://tailwindcss.com/) and actualy implement darkmode on an app unlike [one of my creations](https://okerkilltodoapp.vercel.app) which only has a toggle but dosen't actually support dark mode.
+
+I wen't on hunting for a desing on [Dribbble](https://dribbble.com) and came along some designs by ()[], I went on and reverse enginnered them on [Figma](https://www.figma.com/file/N0Wl1Aueka5IQr7hRVK40E/Dashbords?node-id=0%3A1) and went on to develope the app in [Next](https://nextjs.org/)
 
 ## Getting Started
 
@@ -40,6 +47,7 @@ On the settings page you can change a few settings to your preference such as
 
 - Javascript Library [React](https://reactjs.org/)
 - React Framework [Nextjs](https://nextjs.org/)
+- Style [TailwindCSS](https://tailwindcss.com/)
 - Object Relation Model [Prisma](https://www.prisma.io/)
 - Database Deployment [Planet-scale](https://planetscale.com/)
 - Animation [Framer-motion](https://www.framer.com/motion/)
@@ -77,7 +85,10 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 ### Acknowledgements
 
-Used the same tech stack I did for the [Overkill To-do App](https://github.com/munyachiwundura/todo-app-v2/blob/main/README.md) So I might as well acknwledge the same techers however I might as well thank [ARSHAKIR](https://www.arshakir.com/) for the dashboard design
+Used the same tech stack I did for the [Overkill To-do App](https://github.com/munyachiwundura/todo-app-v2/blob/main/README.md) So I might as well acknwledge the same techers however I should also thank
+
+- [ARSHAKIR](https://www.arshakir.com/) for the dashboard design
+- [Simon Vrachilotis](https://github.com/simonswiss) For the tailwind css lessons
 
 ### Screenshots
 
